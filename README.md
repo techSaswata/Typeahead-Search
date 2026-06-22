@@ -22,8 +22,7 @@ store.
 ![Home](docs/screenshot-home.png)
 ![Suggestions](docs/screenshot-suggestions.png)
 
-<details>
-<summary><b>More search examples</b> (click to expand) — diverse queries, category tags, filtering & trending</summary>
+### More search examples — diverse queries, category tags, filtering & trending
 
 | `harry` — films + people | `tokyo` — places | `the dark` — films |
 |---|---|---|
@@ -38,8 +37,6 @@ store.
 The **Trending** shot shows *Oppenheimer* boosted to #1 with a ▲187.6 recency
 badge after a burst of searches — even though its raw popularity ranks lower —
 demonstrating the recency-aware ranking (PRD §7).
-
-</details>
 
 ---
 
