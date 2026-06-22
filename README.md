@@ -1,8 +1,7 @@
 # Search Typeahead System
 
-A production-style search typeahead — the kind of instant-suggestion feature you
+A search typeahead — the kind of instant-suggestion feature you
 see in Google, Amazon, or YouTube — built end-to-end on **Next.js 14 + TypeScript**
-in a single codebase (no separate frontend/backend folders).
 
 It serves prefix suggestions from an **in-memory completion Trie**, fronts that
 with a **distributed cache partitioned by consistent hashing**, ranks results
@@ -10,14 +9,18 @@ either by all-time popularity or a **recency-aware trending score**, and absorbs
 write traffic with an **aggregating batch writer** in front of a durable SQLite
 store.
 
-| | |
-|---|---|
-| Dataset | **5 real sources** (Wikipedia, IMDb titles, IMDb people, GeoNames, ORCAS) merged & log-normalized — millions of queries; top **500k** in the Trie, **1.2M** in the store |
-| Categories | every suggestion tagged `wiki` / `movie` / `person` / `place` / `query` and filterable |
-| Suggestion latency (server) | **p50 ≈ 0.001 ms · p95 ≈ 0.003 ms** (in-process Trie/cache) |
-| Suggestion latency (end-to-end HTTP) | **p95 ≈ 11 ms @ ~2,850 req/s** |
-| Cache hit rate (typing traffic) | **~99%** |
-| Write reduction from batching | **~99.7%** (≈ 340× fewer DB writes) |
+**Dataset — five real public sources merged into one corpus:**
+
+| Source | Category | Real popularity signal | Raw rows |
+|---|---|---|---|
+| Wikipedia pageviews (en, 8 h of 2024-01-15) | `wiki` | hourly page views | 2,811,437 |
+| IMDb `title.basics` + `title.ratings` | `movie` | number of votes per title | 395,841 |
+| IMDb `name.basics` | `person` | votes summed over known-for titles | 4,893,078 |
+| GeoNames `cities500` | `place` | city population | 176,107 |
+| ORCAS (Bing click logs) | `query` | real search-query click frequency | 4,002,396 |
+| **Merged corpus** (`data/queries.tsv`) | — | log-normalized + weighted, top by score | **1,200,000** |
+
+Top **500k** rows are loaded into the in-memory Trie, **1.2M** into the durable store. Every suggestion is tagged with its source category and is filterable.
 
 ![Home](docs/screenshot-home.png)
 ![Suggestions](docs/screenshot-suggestions.png)
